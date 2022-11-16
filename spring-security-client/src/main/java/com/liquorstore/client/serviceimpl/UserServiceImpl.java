@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
+import java.util.UUID;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -66,4 +67,15 @@ public class UserServiceImpl implements UserService {
         verificationTokenRepository.delete(verificationToken);
         return "valid";
     }
+
+    @Override
+    public VerificationToken getVerificationToken(String oldToken) {
+        return verificationTokenRepository.findByToken(oldToken);
+    }
+
+    @Override
+    public void deleteVerificationToken(VerificationToken verificationToken) {
+        verificationTokenRepository.delete(verificationToken);
+    }
+
 }

@@ -1,6 +1,7 @@
 package com.liquorstore.client.controller;
 
 import com.liquorstore.client.entity.User;
+import com.liquorstore.client.entity.VerificationToken;
 import com.liquorstore.client.event.RegistrationCompleteEvent;
 import com.liquorstore.client.model.UserModel;
 import com.liquorstore.client.service.UserService;
@@ -36,6 +37,18 @@ public class RegistrationController {
             return "User Verified Successfully";
         }
         return "Bad User";
+    }
+
+    @GetMapping("/resendVerificationToken")
+    public String resendVerificationToken(@RequestParam("token") String oldToken, HttpServletRequest request) {
+        VerificationToken verificationToken = userService.getVerificationToken(oldToken);
+        User user = verificationToken.getUser();
+        userService.deleteVerificationToken(verificationToken);
+        publisher.publishEvent(new RegistrationCompleteEvent(
+                user,
+                applicationUrl(request)
+        ));
+        return "Verification link sent";
     }
 
     private String applicationUrl(HttpServletRequest request) {
