@@ -1,9 +1,9 @@
 package com.liquorstore.client.repository;
 
-import com.liquorstore.client.entity.User;
+import com.liquorstore.client.entity.VerificationToken;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface VerificationTokenRepository extends JpaRepository<VerificationToken, Long> {
 }

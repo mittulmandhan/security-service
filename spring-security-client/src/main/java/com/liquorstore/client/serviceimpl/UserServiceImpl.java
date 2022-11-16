@@ -1,8 +1,10 @@
 package com.liquorstore.client.serviceimpl;
 
 import com.liquorstore.client.entity.User;
+import com.liquorstore.client.entity.VerificationToken;
 import com.liquorstore.client.model.UserModel;
 import com.liquorstore.client.repository.UserRepository;
+import com.liquorstore.client.repository.VerificationTokenRepository;
 import com.liquorstore.client.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -13,6 +15,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private VerificationTokenRepository verificationTokenRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -28,5 +33,12 @@ public class UserServiceImpl implements UserService {
 
         userRepository.save(user);
         return user;
+    }
+
+    @Override
+    public void saveVerificationTokenForUser(String token, User user) {
+        VerificationToken verificationToken
+                 = new VerificationToken(user, token);
+        verificationTokenRepository.save(verificationToken);
     }
 }
