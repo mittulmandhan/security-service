@@ -35,7 +35,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
                     userDetails.getAuthorities()
             );
         }
-        return new BadCredentialsException();
+        throw new BadCredentialsException("Password doesn't match");
     }
 
     @Override
