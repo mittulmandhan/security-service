@@ -14,6 +14,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/oauth-authorization-server" />
+            <option value="$PROJECT_DIR$/oauth-resource-server" />
             <option value="$PROJECT_DIR$/spring-security-client" />
           </set>
         </option>
