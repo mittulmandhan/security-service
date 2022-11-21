@@ -14,7 +14,7 @@ public class ResourceServerConfig {
                 .mvcMatcher("/api/**")
                 .authorizeHttpRequests()
                 .mvcMatchers("/api/**")
-                .access("hasAuthority('SCOPE_api.read')")
+                .hasAuthority("SCOPE_api.read")
                 .and()
                 .oauth2ResourceServer()
                 .jwt();
