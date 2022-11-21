@@ -64,6 +64,7 @@ public class RegistrationController {
             String token = UUID.randomUUID().toString();
             userService.createPasswordResetTokenForUser(user, token);
             url = passwordResetTokenMail(user, applicationUrl(request), token);
+            
         }
         return url;
     }

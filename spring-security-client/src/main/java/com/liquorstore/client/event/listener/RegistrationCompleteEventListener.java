@@ -6,6 +6,8 @@ import com.liquorstore.client.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
@@ -17,6 +19,9 @@ public class RegistrationCompleteEventListener implements ApplicationListener<Re
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private JavaMailSender mailSender;
+
     @Override
     public void onApplicationEvent(RegistrationCompleteEvent event) {
         // Create the verification token for the user
@@ -27,6 +32,13 @@ public class RegistrationCompleteEventListener implements ApplicationListener<Re
         //Send mail to user
         String url = event.getApplicationUrl() + "/verifyRegistration?token=" + token;
         // pending: send verification email
-        log.info("Click the link to verify your account: " + url);
-    }
+//        log.info("Click the link to verify your account: " + url);
+        SimpleMailMessage mail = new SimpleMailMessage();
+        mail.setFrom("mittul.store.liquor@gmail.com");
+        mail.setTo(user.getEmail());
+        mail.setSubject("Email Verification");
+        mail.setText("Click the link to verify your account: " + url);
+        mailSender.send(mail);
+        System.out.println("Mail Sent!");
+     }
 }
