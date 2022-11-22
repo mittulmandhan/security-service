@@ -5,6 +5,7 @@ import com.liquorstore.client.entity.VerificationToken;
 import com.liquorstore.client.event.RegistrationCompleteEvent;
 import com.liquorstore.client.model.PasswordModel;
 import com.liquorstore.client.model.UserModel;
+import com.liquorstore.client.service.MailSenderService;
 import com.liquorstore.client.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,9 @@ public class RegistrationController {
 
     @Autowired
     private ApplicationEventPublisher publisher;
+
+    @Autowired
+    private MailSenderService mailSenderService;
 
     @PostMapping("/register")
     public String registerUser(@RequestBody UserModel userModel, final HttpServletRequest request) {
@@ -64,7 +68,6 @@ public class RegistrationController {
             String token = UUID.randomUUID().toString();
             userService.createPasswordResetTokenForUser(user, token);
             url = passwordResetTokenMail(user, applicationUrl(request), token);
-            
         }
         return url;
     }
@@ -101,8 +104,10 @@ public class RegistrationController {
 
     private String passwordResetTokenMail(User user, String applicationUrl, String token) {
         String url = applicationUrl + "/savePassword?token=" + token;
-
         log.info("Click the link to reset your password: " + url);
+
+        // send mail
+        mailSenderService.send(user.getEmail(), "Reset Password", "Click the link to reset your password: " + url);
 
         return url;
     }
