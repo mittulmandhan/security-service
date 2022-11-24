@@ -41,4 +41,7 @@ public class OneTimePassword {
         return new Date(calendar.getTime().getTime());
     }
 
+    public int getOTPValidity() {
+        return EXPIRATION_TIME;
+    }
 }

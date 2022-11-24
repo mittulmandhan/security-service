@@ -29,7 +29,7 @@ public class TwilioSMSServiceImpl implements TwilioSMSService {
             otpStatus = OtpStatus.DELIVERED;
             System.out.println("Message Sent!");
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
+            ex.printStackTrace();
         }
         return otpStatus;
     }

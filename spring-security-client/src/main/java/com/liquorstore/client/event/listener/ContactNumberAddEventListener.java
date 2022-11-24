@@ -29,7 +29,8 @@ public class ContactNumberAddEventListener implements ApplicationListener<Contac
         OneTimePassword oneTimePassword = new OneTimePassword(user, otp);
         oneTimePasswordService.save(oneTimePassword);
 
-        twilioSMSService.sendSMS("Hello " + otp, user.getContactNumber());
+        twilioSMSService.sendSMS("Hi " + user.getFirstName() + "! your otp is " + otp + ".\nThe otp will expire in " + oneTimePassword.getOTPValidity() + " minutes.\nDo not share your otp with anyone.", user.getContactNumber());
+//        System.out.println("SendSMS method called");
     }
 
     private String generateOTP() {
