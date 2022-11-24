@@ -18,10 +18,14 @@ public class User {
 
     private String email;
 
+    private String contactNumber;
+
     @Column(length = 60)
     private String password;
 
     private String role;
 
     private boolean enabled = false;
+
+    private boolean contactNumberVerified = false;
 }

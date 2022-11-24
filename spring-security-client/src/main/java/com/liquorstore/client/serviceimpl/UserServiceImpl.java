@@ -1,13 +1,18 @@
 package com.liquorstore.client.serviceimpl;
 
+import com.liquorstore.client.entity.OneTimePassword;
 import com.liquorstore.client.entity.PasswordResetToken;
 import com.liquorstore.client.entity.User;
 import com.liquorstore.client.entity.VerificationToken;
+import com.liquorstore.client.model.ContactNumberModel;
+import com.liquorstore.client.model.OTPModel;
 import com.liquorstore.client.model.UserModel;
+import com.liquorstore.client.repository.OneTimePasswordRepository;
 import com.liquorstore.client.repository.PasswordResetTokenRepository;
 import com.liquorstore.client.repository.UserRepository;
 import com.liquorstore.client.repository.VerificationTokenRepository;
 import com.liquorstore.client.service.UserService;
+import com.liquorstore.client.utility.OtpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -29,6 +34,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private OneTimePasswordRepository oneTimePasswordRepository;
 
     @Override
     public User registerUser(UserModel userModel) {
@@ -127,6 +135,35 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean isOldPasswordValid(User user, String oldPassword) {
         return passwordEncoder.matches(oldPassword, user.getPassword());
+    }
+
+    @Override
+    public User addContactNumber(ContactNumberModel contactNumber) {
+        User user = userRepository.findByEmail(contactNumber.getUserName());
+        user.setContactNumber(contactNumber.getNumber());
+        userRepository.save(user);
+        return user;
+    }
+
+    @Override
+    public OtpStatus validateOTP(OTPModel otpModel) {
+        User user = userRepository.findByEmail(otpModel.getUserName());
+        OneTimePassword oneTimePassword = oneTimePasswordRepository.findByOtp(otpModel.getOtp());
+        Calendar cal = Calendar.getInstance();
+
+        if(oneTimePassword == null) {
+            return OtpStatus.INVALID;
+        }
+
+        if((oneTimePassword.getExpirationTime().getTime()
+                - cal.getTime().getTime()) <= 0) {
+            oneTimePasswordRepository.delete(oneTimePassword);
+            return OtpStatus.EXPIRED;
+        }
+
+        user.setContactNumberVerified(true);
+        oneTimePasswordRepository.delete(oneTimePassword);
+        return OtpStatus.VALID;
     }
 
 }

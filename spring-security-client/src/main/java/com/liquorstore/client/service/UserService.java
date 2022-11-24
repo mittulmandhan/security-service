@@ -2,7 +2,10 @@ package com.liquorstore.client.service;
 
 import com.liquorstore.client.entity.User;
 import com.liquorstore.client.entity.VerificationToken;
+import com.liquorstore.client.model.ContactNumberModel;
+import com.liquorstore.client.model.OTPModel;
 import com.liquorstore.client.model.UserModel;
+import com.liquorstore.client.utility.OtpStatus;
 
 import java.util.Optional;
 
@@ -28,4 +31,8 @@ public interface UserService {
     void savePassword(User user, String newPassword);
 
     boolean isOldPasswordValid(User user, String oldPassword);
+
+    User addContactNumber(ContactNumberModel contactNumber);
+
+    OtpStatus validateOTP(OTPModel otpModel);
 }

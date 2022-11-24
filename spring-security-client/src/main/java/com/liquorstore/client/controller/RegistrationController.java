@@ -2,11 +2,15 @@ package com.liquorstore.client.controller;
 
 import com.liquorstore.client.entity.User;
 import com.liquorstore.client.entity.VerificationToken;
+import com.liquorstore.client.event.ContactNumberAddEvent;
 import com.liquorstore.client.event.RegistrationCompleteEvent;
+import com.liquorstore.client.model.OTPModel;
 import com.liquorstore.client.model.PasswordModel;
+import com.liquorstore.client.model.ContactNumberModel;
 import com.liquorstore.client.model.UserModel;
 import com.liquorstore.client.service.MailSenderService;
 import com.liquorstore.client.service.UserService;
+import com.liquorstore.client.utility.OtpStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -100,6 +104,20 @@ public class RegistrationController {
         // save new password
         userService.savePassword(user, passwordModel.getNewPassword());
         return "Password changed successfully";
+    }
+
+    @PostMapping("/addContactNumber")
+    public String addContactNumber(@RequestBody ContactNumberModel contactNumber) {
+        User user = userService.addContactNumber(contactNumber);
+        publisher.publishEvent(new ContactNumberAddEvent(user));
+        return "Please check your phone for otp";
+    }
+
+    @PostMapping("/validateOTP")
+    public String validateOTP(@RequestBody OTPModel otpModel) {
+
+        return userService.validateOTP(otpModel).toString();
+
     }
 
     private String passwordResetTokenMail(User user, String applicationUrl, String token) {
