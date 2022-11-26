@@ -16,9 +16,9 @@ public class HelloController {
     @Autowired
     private WebClient webClient;
 
-    @GetMapping("/api/hello")
+    @GetMapping("/hello")
     public String hello(Principal principal) {
-        return "Hello " + principal.getName() + ", Welcome to my sample resource";
+        return "Hello! Welcome to my sample resource";
     }
 
     @GetMapping("/api/users")

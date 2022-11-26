@@ -24,6 +24,7 @@ public class DefaultSecurityConfig {
         return http.build();
     }
 
+    @Autowired
     public  void bindAuthenticationProvider(AuthenticationManagerBuilder authenticationManagerBuilder) {
     authenticationManagerBuilder
             .authenticationProvider(customAuthenticationProvider);
