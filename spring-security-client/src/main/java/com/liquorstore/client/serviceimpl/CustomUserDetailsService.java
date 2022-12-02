@@ -1,7 +1,7 @@
-package com.liquorstore.oauthserver.service;
+package com.liquorstore.client.serviceimpl;
 
-import com.liquorstore.oauthserver.entity.User;
-import com.liquorstore.oauthserver.repository.UserRepository;
+import com.liquorstore.client.entity.User;
+import com.liquorstore.client.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.GrantedAuthority;
@@ -53,8 +53,8 @@ public class CustomUserDetailsService implements UserDetailsService {
         return authorities;
     }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(11);
-    }
+//    @Bean
+//    public PasswordEncoder passwordEncoder() {
+//        return new BCryptPasswordEncoder(11);
+//    }
 }
