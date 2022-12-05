@@ -28,28 +28,27 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        System.out.println("Jwt Filter Called");
+//        System.out.println("Jwt Filter Called");
 
         String authorization = request.getHeader("Authorization");
         String token = null;
         String userName = null;
 
-        System.out.println("authorization: " + authorization);
-        System.out.println(authorization.startsWith("Bearer "));
+//        System.out.println("authorization: " + authorization);
+//        System.out.println(authorization.startsWith("Bearer "));
 
         if(authorization != null && authorization.startsWith("Bearer ")) {
             token = authorization.substring(7);
             userName = jwtUtility.getUsernameFromToken(token);
         }
 
-        System.out.println("user: " + userName);
-        System.out.println("token: " + token);
+//        System.out.println("user: " + userName);
+//        System.out.println("token: " + token);
 
         if(userName != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = customUserDetailsService.loadUserByUsername(userName);
 
             if(jwtUtility.isTokenValid(token, userDetails)) {
-                System.out.println("User Saved");
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken
                         = new UsernamePasswordAuthenticationToken(
                         userDetails,
@@ -59,6 +58,7 @@ public class JwtFilter extends OncePerRequestFilter {
                         new WebAuthenticationDetailsSource().buildDetails(request)
                 );
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+                System.out.println("User Saved in Context");
 
             }
         }
