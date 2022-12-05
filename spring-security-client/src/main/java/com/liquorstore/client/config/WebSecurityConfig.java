@@ -23,7 +23,8 @@ public class WebSecurityConfig {
             "/changePassword",
             "/savePassword",
             "/validateOTP",
-            "/addContactNumber"
+            "/addContactNumber",
+            "/authenticate"
     };
 
 //    @Autowired
