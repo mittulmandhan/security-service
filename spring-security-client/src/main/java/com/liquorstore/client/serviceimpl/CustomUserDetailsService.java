@@ -1,16 +1,13 @@
-package com.liquorstore.oauthserver.service;
+package com.liquorstore.client.serviceimpl;
 
-import com.liquorstore.oauthserver.entity.User;
-import com.liquorstore.oauthserver.repository.UserRepository;
+import com.liquorstore.client.entity.User;
+import com.liquorstore.client.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -30,13 +27,14 @@ public class CustomUserDetailsService implements UserDetailsService {
         User user = userRepository.findByEmail(email);
         if (user == null)
             throw new UsernameNotFoundException("No User Found");
+
         return new org.springframework.security.core.userdetails.User(
                 user.getEmail(),
                 user.getPassword(),
                 user.isEnabled(),
                 true,
                 true,
-                true,
+                user.isEnabled(),
                 getAuthorities(List.of(user.getRole()))
         );
 
@@ -53,8 +51,4 @@ public class CustomUserDetailsService implements UserDetailsService {
         return authorities;
     }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(11);
-    }
 }

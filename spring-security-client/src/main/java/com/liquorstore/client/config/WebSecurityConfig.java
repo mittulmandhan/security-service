@@ -11,8 +11,11 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class WebSecurityConfig {
 
+//    @Autowired
+//    private CustomAuthenticationProvider customAuthenticationProvider;
+
     private static final String[] WHITE_LIST_URLS = {
-            "/hello",
+//            "/hello",
             "/register",
             "/verifyRegistration",
             "/resendVerificationToken",
@@ -23,10 +26,11 @@ public class WebSecurityConfig {
             "/addContactNumber"
     };
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(11);
-    }
+//    @Autowired
+//    public void bindAuthenticationProvider(AuthenticationManagerBuilder authenticationManagerBuilder) {
+//        authenticationManagerBuilder
+//                .authenticationProvider(customAuthenticationProvider);
+//    }
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -35,13 +39,17 @@ public class WebSecurityConfig {
                 .and()
                 .csrf()
                 .disable()
-                .authorizeRequests()
+                .authorizeHttpRequests()
                 .antMatchers(WHITE_LIST_URLS).permitAll()
                 .antMatchers("/**").authenticated()
                 .and()
-                .oauth2Login(oauth2login -> oauth2login.loginPage("/oauth2/authorization/api-client-oidc"))
-                .oauth2Client(Customizer.withDefaults());
+                .formLogin(Customizer.withDefaults());
         return http.build();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder(11);
     }
 
 }

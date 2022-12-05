@@ -10,7 +10,7 @@ import java.util.Date;
 @Entity
 @Data
 @NoArgsConstructor
-public class VerificationToken {
+public class  VerificationToken {
 
     // Expiration Time is 10 minutes
     private static final int EXPIRATION_TIME = 10;
@@ -33,7 +33,7 @@ public class VerificationToken {
         this.user = user;
     }
 
-    public VerificationToken(String token) {
+    private VerificationToken(String token) {
         super();
         this.token = token;
         expirationTime = calculateExpirationDate(EXPIRATION_TIME);

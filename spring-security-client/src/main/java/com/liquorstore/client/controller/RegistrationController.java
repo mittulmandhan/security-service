@@ -4,10 +4,7 @@ import com.liquorstore.client.entity.User;
 import com.liquorstore.client.entity.VerificationToken;
 import com.liquorstore.client.event.ContactNumberAddEvent;
 import com.liquorstore.client.event.RegistrationCompleteEvent;
-import com.liquorstore.client.model.OTPModel;
-import com.liquorstore.client.model.PasswordModel;
-import com.liquorstore.client.model.ContactNumberModel;
-import com.liquorstore.client.model.UserModel;
+import com.liquorstore.client.model.*;
 import com.liquorstore.client.service.MailSenderService;
 import com.liquorstore.client.service.UserService;
 import com.liquorstore.client.utility.OtpStatus;
@@ -51,6 +48,8 @@ public class RegistrationController {
         }
         return "Bad User";
     }
+
+
 
     @GetMapping("/resendVerificationToken")
     public String resendVerificationToken(@RequestParam("token") String oldToken, HttpServletRequest request) {
