@@ -63,7 +63,7 @@ public class UserServiceImpl implements UserService {
         VerificationToken verificationToken
                 = verificationTokenRepository.findByToken(token);
         if(verificationToken == null) {
-            return "invalid token";
+            return "invalid";
         }
 
         User user = verificationToken.getUser();

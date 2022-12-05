@@ -1,4 +1,4 @@
-package com.liquorstore.oauthserver.service;
+package com.liquorstore.client.serviceimpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;

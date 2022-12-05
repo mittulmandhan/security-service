@@ -4,16 +4,18 @@ import com.liquorstore.client.entity.User;
 import com.liquorstore.client.entity.VerificationToken;
 import com.liquorstore.client.event.ContactNumberAddEvent;
 import com.liquorstore.client.event.RegistrationCompleteEvent;
-import com.liquorstore.client.model.OTPModel;
-import com.liquorstore.client.model.PasswordModel;
-import com.liquorstore.client.model.ContactNumberModel;
-import com.liquorstore.client.model.UserModel;
+import com.liquorstore.client.model.*;
 import com.liquorstore.client.service.MailSenderService;
 import com.liquorstore.client.service.UserService;
-import com.liquorstore.client.utility.OtpStatus;
+import com.liquorstore.client.serviceimpl.CustomAuthenticationProvider;
+import com.liquorstore.client.serviceimpl.CustomUserDetailsService;
+import com.liquorstore.client.utility.JWTUtility;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,6 +25,15 @@ import java.util.UUID;
 @Slf4j
 @RestController
 public class RegistrationController {
+
+    @Autowired
+    private JWTUtility jwtUtility;
+
+    @Autowired
+    private CustomAuthenticationProvider customAuthenticationProvider;
+
+    @Autowired
+    private CustomUserDetailsService customUserDetailsService;
 
     @Autowired
     private UserService userService;
@@ -50,6 +61,28 @@ public class RegistrationController {
             return "User Verified Successfully";
         }
         return "Bad User";
+    }
+
+    @PostMapping("/authenticate")
+    public AuthenticationResponseDTO authenticate(@RequestBody AuthenticationRequestDTO authenticationRequestDTO) throws Exception {
+        try {
+            customAuthenticationProvider.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            authenticationRequestDTO.getUsername(),
+                            authenticationRequestDTO.getPassword()
+                    )
+            );
+        } catch (BadCredentialsException e) {
+            throw new Exception("INVALID_CREDENTIALS", e);
+        }
+
+        final UserDetails userDetails
+                = customUserDetailsService.loadUserByUsername(authenticationRequestDTO.getUsername());
+
+        final String token =
+                jwtUtility.generateToken(userDetails);
+
+        return new AuthenticationResponseDTO(token);
     }
 
     @GetMapping("/resendVerificationToken")
